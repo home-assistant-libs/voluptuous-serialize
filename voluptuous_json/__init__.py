@@ -17,7 +17,7 @@ def convert(schema):
         schema = schema.schema
 
     if isinstance(schema, collections.Mapping):
-        val = {}
+        val = []
 
         for key, value in schema.items():
             if isinstance(key, vol.Marker):
@@ -26,6 +26,7 @@ def convert(schema):
                 pkey = key
 
             pval = convert(value)
+            pval['name'] = pkey
 
             if isinstance(key, (vol.Required, vol.Optional)):
                 pval[key.__class__.__name__.lower()] = True
@@ -33,7 +34,7 @@ def convert(schema):
                 if key.default is not vol.UNDEFINED:
                     pval['default'] = key.default()
 
-            val[pkey] = pval
+            val.append(pval)
 
         return val
 

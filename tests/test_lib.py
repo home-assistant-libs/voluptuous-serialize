@@ -58,24 +58,27 @@ def test_in():
 
 
 def test_dict():
-    assert {
-        'name': {
+    assert [
+        {
+            'name': 'name',
             'type': 'string',
             'length-min': 5,
             'required': True,
         },
-        'age': {
+        {
+            'name': 'age',
             'type': 'integer',
             'value-min': 18,
             'required': True,
         },
-        'hobby': {
+        {
+            'name': 'hobby',
             'type': 'string',
             'default': 'not specified',
             'optional': True,
         }
-    } == convert(vol.Schema({
-        vol.Required('name'): vol.All(str, vol.Length(min=5)),
-        vol.Required('age'): vol.All(vol.Coerce(int), vol.Range(min=18)),
-        vol.Optional('hobby', default='not specified'): str
-    }))
+     ] == convert(vol.Schema({
+            vol.Required('name'): vol.All(str, vol.Length(min=5)),
+            vol.Required('age'): vol.All(vol.Coerce(int), vol.Range(min=18)),
+            vol.Optional('hobby', default='not specified'): str
+        }))

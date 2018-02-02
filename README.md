@@ -16,24 +16,29 @@ vol.Schema({
 
 becomes
 
+_(dictionaries become lists to guarantee order of properties)_
+
 ```json
-{
-  "name": {
+[
+  {
+    "name": "name",
     "type": "string",
     "length-min": 5,
     "required": true,
   },
-  "age": {
+  {
+    "name": "age",
     "type": "integer",
     "value-min": 18,
     "required": true,
   },
-  "hobby": {
+  {
+    "name": "hobby",
     "type": "string",
     "default": "not specified",
     "optional": true,
   }
-}
+]
 ```
 
 See the tests for more examples.
