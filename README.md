@@ -1,8 +1,8 @@
 ### This is an experiment. Not production ready. Do not use.
 
-# Voluptuous Forms (experiment)
+# Voluptuous JSON (experiment)
 
-This is an experiment to see if it is possible to easily convert voluptuous forms to dictionaries that represent what data is expected.
+This is an experiment to see if it is possible to easily convert voluptuous schemas to JSON.
 
 Goal would be to create a set of Polymer components that can consume this data and generate a form that matches the expected data.
 
