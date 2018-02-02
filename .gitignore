@@ -91,3 +91,6 @@ pyvenv.cfg
 
 # Rope project settings
 .ropeproject
+
+# py.test
+.pytest_cache

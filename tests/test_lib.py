@@ -1,26 +1,26 @@
 import voluptuous as vol
 
-from voluptuous_form import get_form
+from voluptuous_json import convert
 
 
 def test_int_schema():
     for value in int, vol.Coerce(int):
-        assert {'type': 'integer'} == get_form(vol.Schema(value))
+        assert {'type': 'integer'} == convert(vol.Schema(value))
 
 
 def test_str_schema():
     for value in str, vol.Coerce(str):
-        assert {'type': 'string'} == get_form(vol.Schema(value))
+        assert {'type': 'string'} == convert(vol.Schema(value))
 
 
 def test_float_schema():
     for value in float, vol.Coerce(float):
-        assert {'type': 'float'} == get_form(vol.Schema(value))
+        assert {'type': 'float'} == convert(vol.Schema(value))
 
 
 def test_bool_schema():
     for value in bool, vol.Coerce(bool):
-        assert {'type': 'boolean'} == get_form(vol.Schema(value))
+        assert {'type': 'boolean'} == convert(vol.Schema(value))
 
 
 def test_integer_clamp():
@@ -28,7 +28,7 @@ def test_integer_clamp():
         'type': 'integer',
         'value-min': 100,
         'value-max': 1000,
-    } == get_form(vol.Schema(
+    } == convert(vol.Schema(
             vol.All(vol.Coerce(int),
                     vol.Clamp(min=100, max=1000))))
 
@@ -38,7 +38,7 @@ def test_length():
         'type': 'string',
         'length-min': 100,
         'length-max': 1000,
-    } == get_form(vol.Schema(
+    } == convert(vol.Schema(
             vol.All(vol.Coerce(str),
                     vol.Length(min=100, max=1000))))
 
@@ -47,14 +47,14 @@ def test_datetime():
     assert {
         'type': 'datetime',
         'format': '%Y-%m-%dT%H:%M:%S.%fZ',
-    } == get_form(vol.Schema(vol.Datetime()))
+    } == convert(vol.Schema(vol.Datetime()))
 
 
 def test_in():
     assert {
         'type': 'select',
         'options': ['beer', 'wine'],
-    } == get_form(vol.Schema(vol.In(['beer', 'wine'])))
+    } == convert(vol.Schema(vol.In(['beer', 'wine'])))
 
 
 def test_dict():
@@ -74,7 +74,7 @@ def test_dict():
             'default': 'not specified',
             'optional': True,
         }
-    } == get_form(vol.Schema({
+    } == convert(vol.Schema({
         vol.Required('name'): vol.All(str, vol.Length(min=5)),
         vol.Required('age'): vol.All(vol.Coerce(int), vol.Range(min=18)),
         vol.Optional('hobby', default='not specified'): str

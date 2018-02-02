@@ -11,8 +11,8 @@ TYPES_MAP = {
 }
 
 
-def get_form(schema):
-    """Return a form specification describing the schema."""
+def convert(schema):
+    """Convert a voluptuous schema to JSON."""
     if isinstance(schema, vol.Schema):
         schema = schema.schema
 
@@ -25,7 +25,7 @@ def get_form(schema):
             else:
                 pkey = key
 
-            pval = get_form(value)
+            pval = convert(value)
 
             if isinstance(key, (vol.Required, vol.Optional)):
                 pval[key.__class__.__name__.lower()] = True
@@ -40,7 +40,7 @@ def get_form(schema):
     if isinstance(schema, vol.All):
         val = {}
         for validator in schema.validators:
-            val.update(get_form(validator))
+            val.update(convert(validator))
         return val
 
     elif isinstance(schema, (vol.Clamp, vol.Range)):
