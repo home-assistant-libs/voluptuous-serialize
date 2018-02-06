@@ -1,3 +1,4 @@
+"""Module to convert voluptuous schemas to dictionaries."""
 import collections
 
 import voluptuous as vol
@@ -12,7 +13,7 @@ TYPES_MAP = {
 
 
 def convert(schema):
-    """Convert a voluptuous schema to JSON."""
+    """Convert a voluptuous schema to a dictionary."""
     if isinstance(schema, vol.Schema):
         schema = schema.schema
 

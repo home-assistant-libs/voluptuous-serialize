@@ -1,6 +1,6 @@
 import voluptuous as vol
 
-from voluptuous_json import convert
+from voluptuous_serialize import convert
 
 
 def test_int_schema():

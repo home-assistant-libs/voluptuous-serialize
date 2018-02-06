@@ -1,17 +1,17 @@
-### This is an experiment. Not production ready. Do not use.
+# Voluptuous Serialize
 
-# Voluptuous JSON (experiment)
-
-This is an experiment to see if it is possible to easily convert voluptuous schemas to JSON.
-
-Goal would be to create a set of Polymer components that can consume this data and generate a form that matches the expected data.
+Convert Voluptuous schemas to dictionaries so they can be serialized.
 
 ```python
-vol.Schema({
-    vol.Required('name'): vol.All(str, vol.Length(min=5)),
-    vol.Required('age'): vol.All(vol.Coerce(int), vol.Range(min=18)),
-    vol.Optional('hobby', default='not specified'): str
-})
+from collections import OrderedDict
+
+# Use OrderedDict instead of dict.
+# Only starting Python 3.6+ are dictionaries ordered.
+schema = OrderedDict()
+schema[vol.Required('name')] = vol.All(str, vol.Length(min=5))
+schema[vol.Required('age')] = vol.All(vol.Coerce(int), vol.Range(min=18))
+schema[vol.Optional('hobby', default='not specified')] = str
+schema = vol.Schema(schema)
 ```
 
 becomes
