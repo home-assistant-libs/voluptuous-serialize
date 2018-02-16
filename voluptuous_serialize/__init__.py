@@ -21,13 +21,17 @@ def convert(schema):
         val = []
 
         for key, value in schema.items():
+            description = None
             if isinstance(key, vol.Marker):
                 pkey = key.schema
+                description = key.description
             else:
                 pkey = key
 
             pval = convert(value)
             pval['name'] = pkey
+            if description is not None:
+                pval['description'] = description
 
             if isinstance(key, (vol.Required, vol.Optional)):
                 pval[key.__class__.__name__.lower()] = True

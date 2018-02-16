@@ -82,3 +82,14 @@ def test_dict():
             vol.Required('age'): vol.All(vol.Coerce(int), vol.Range(min=18)),
             vol.Optional('hobby', default='not specified'): str
         }))
+
+
+def test_marker_description():
+    assert [{
+        'name': 'name',
+        'type': 'string',
+        'description': 'Description of name',
+        'required': True,
+    }] == convert(vol.Schema({
+        vol.Required('name', description='Description of name'): str,
+    }))
