@@ -23,13 +23,13 @@ _(dictionaries become lists to guarantee order of properties)_
   {
     "name": "name",
     "type": "string",
-    "length-min": 5,
+    "lengthMin": 5,
     "required": true,
   },
   {
     "name": "age",
     "type": "integer",
-    "value-min": 18,
+    "valueMin": 18,
     "required": true,
   },
   {

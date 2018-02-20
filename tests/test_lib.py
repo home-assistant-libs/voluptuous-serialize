@@ -26,8 +26,8 @@ def test_bool_schema():
 def test_integer_clamp():
     assert {
         'type': 'integer',
-        'value-min': 100,
-        'value-max': 1000,
+        'valueMin': 100,
+        'valueMax': 1000,
     } == convert(vol.Schema(
             vol.All(vol.Coerce(int),
                     vol.Clamp(min=100, max=1000))))
@@ -36,8 +36,8 @@ def test_integer_clamp():
 def test_length():
     assert {
         'type': 'string',
-        'length-min': 100,
-        'length-max': 1000,
+        'lengthMin': 100,
+        'lengthMax': 1000,
     } == convert(vol.Schema(
             vol.All(vol.Coerce(str),
                     vol.Length(min=100, max=1000))))
@@ -62,13 +62,13 @@ def test_dict():
         {
             'name': 'name',
             'type': 'string',
-            'length-min': 5,
+            'lengthMin': 5,
             'required': True,
         },
         {
             'name': 'age',
             'type': 'integer',
-            'value-min': 18,
+            'valueMin': 18,
             'required': True,
         },
         {

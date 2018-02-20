@@ -48,17 +48,17 @@ def convert(schema):
     elif isinstance(schema, (vol.Clamp, vol.Range)):
         val = {}
         if schema.min is not None:
-            val['value-min'] = schema.min
+            val['valueMin'] = schema.min
         if schema.max is not None:
-            val['value-max'] = schema.max
+            val['valueMax'] = schema.max
         return val
 
     elif isinstance(schema, vol.Length):
         val = {}
         if schema.min is not None:
-            val['length-min'] = schema.min
+            val['lengthMin'] = schema.min
         if schema.max is not None:
-            val['length-max'] = schema.max
+            val['lengthMax'] = schema.max
         return val
 
     elif isinstance(schema, vol.Datetime):
