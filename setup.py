@@ -8,5 +8,5 @@ setup(name='voluptuous-serialize',
       author_email='Paulus@PaulusSchoutsen.nl',
       license='Apache License 2.0',
       install_requires=['voluptuous'],
-      packages=['voluptuous_json'],
+      packages=['voluptuous_serialize'],
       zip_safe=True)
