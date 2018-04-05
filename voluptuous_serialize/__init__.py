@@ -4,14 +4,6 @@ import collections
 import voluptuous as vol
 
 
-TYPES_MAP = {
-    int: 'integer',
-    str: 'string',
-    float: 'float',
-    bool: 'boolean',
-}
-
-
 def convert(schema):
     """Convert a voluptuous schema to a dictionary."""
     if isinstance(schema, vol.Schema):
@@ -29,6 +21,8 @@ def convert(schema):
                 pkey = key
 
             pval = convert(value)
+            if isinstance(pval, list):
+                pval = {'list': pval}
             pval['name'] = pkey
             if description is not None:
                 pval['description'] = description
@@ -36,7 +30,7 @@ def convert(schema):
             if isinstance(key, (vol.Required, vol.Optional)):
                 pval[key.__class__.__name__.lower()] = True
 
-                if key.default is not vol.UNDEFINED:
+                if key.default is not vol.UNDEFINED and not isinstance(key.default, vol.Undefined):
                     pval['default'] = key.default()
 
             val.append(pval)
@@ -46,7 +40,13 @@ def convert(schema):
     if isinstance(schema, vol.All):
         val = {}
         for validator in schema.validators:
-            val.update(convert(validator))
+            converted = convert(validator)
+            if isinstance(converted, list):
+                data = {'list': converted}
+            else:
+                data = converted
+
+            val.update(data)
         return val
 
     elif isinstance(schema, (vol.Clamp, vol.Range)):
@@ -80,7 +80,4 @@ def convert(schema):
     elif isinstance(schema, vol.Coerce):
         schema = schema.type
 
-    if schema in TYPES_MAP:
-        return {'type': TYPES_MAP[schema]}
-
-    raise ValueError('Unable to convert schema: {}'.format(schema))
+    return {'type': schema.__class__.__name__}
