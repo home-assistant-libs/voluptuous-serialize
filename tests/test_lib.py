@@ -57,6 +57,18 @@ def test_in():
     } == convert(vol.Schema(vol.In(['beer', 'wine'])))
 
 
+def test_in_dict():
+    assert {
+        'type': 'select',
+        'options': [
+            'en_US', 'zh_CN'
+            # {'en_US': 'American English'},
+            # {'zh_CN': 'Chinese (Simplified)'},
+        ],
+    } == convert(vol.Schema(vol.In(
+        {'en_US': 'American English', 'zh_CN': 'Chinese (Simplified)'})))
+
+
 def test_dict():
     assert [
         {
