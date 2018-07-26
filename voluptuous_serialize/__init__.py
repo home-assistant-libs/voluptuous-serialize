@@ -72,10 +72,16 @@ def convert(schema):
         }
 
     elif isinstance(schema, vol.In):
-        return {
-            'type': 'select',
-            'options': list(schema.container)
-        }
+        if isinstance(schema.container, collections.Mapping):
+            return {
+                'type': 'select',
+                'options': list(schema.container.items()),
+            }
+        else:
+            return {
+                'type': 'select',
+                'options': [(item, item) for item in schema.container]
+            }
 
     elif isinstance(schema, vol.Coerce):
         schema = schema.type
