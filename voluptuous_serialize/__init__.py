@@ -1,5 +1,5 @@
 """Module to convert voluptuous schemas to dictionaries."""
-import collections
+from collections.abc import Mapping
 
 import voluptuous as vol
 
@@ -14,10 +14,11 @@ TYPES_MAP = {
 
 def convert(schema):
     """Convert a voluptuous schema to a dictionary."""
+    # pylint: disable=too-many-return-statements,too-many-branches
     if isinstance(schema, vol.Schema):
         schema = schema.schema
 
-    if isinstance(schema, collections.Mapping):
+    if isinstance(schema, Mapping):
         val = []
 
         for key, value in schema.items():
@@ -49,7 +50,7 @@ def convert(schema):
             val.update(convert(validator))
         return val
 
-    elif isinstance(schema, (vol.Clamp, vol.Range)):
+    if isinstance(schema, (vol.Clamp, vol.Range)):
         val = {}
         if schema.min is not None:
             val['valueMin'] = schema.min
@@ -57,7 +58,7 @@ def convert(schema):
             val['valueMax'] = schema.max
         return val
 
-    elif isinstance(schema, vol.Length):
+    if isinstance(schema, vol.Length):
         val = {}
         if schema.min is not None:
             val['lengthMin'] = schema.min
@@ -65,25 +66,24 @@ def convert(schema):
             val['lengthMax'] = schema.max
         return val
 
-    elif isinstance(schema, vol.Datetime):
+    if isinstance(schema, vol.Datetime):
         return {
             'type': 'datetime',
             'format': schema.format,
         }
 
-    elif isinstance(schema, vol.In):
-        if isinstance(schema.container, collections.Mapping):
+    if isinstance(schema, vol.In):
+        if isinstance(schema.container, Mapping):
             return {
                 'type': 'select',
                 'options': list(schema.container.items()),
             }
-        else:
-            return {
-                'type': 'select',
-                'options': [(item, item) for item in schema.container]
-            }
+        return {
+            'type': 'select',
+            'options': [(item, item) for item in schema.container]
+        }
 
-    elif isinstance(schema, vol.Coerce):
+    if isinstance(schema, vol.Coerce):
         schema = schema.type
 
     if schema in TYPES_MAP:
