@@ -83,6 +83,11 @@ def convert(schema):
             'options': [(item, item) for item in schema.container]
         }
 
+    if schema in (vol.Lower, vol.Upper, vol.Capitalize, vol.Title, vol.Strip):
+        return {
+            schema.__name__.lower(): True,
+        }
+
     if isinstance(schema, vol.Coerce):
         schema = schema.type
 

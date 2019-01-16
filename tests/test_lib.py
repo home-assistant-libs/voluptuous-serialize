@@ -107,3 +107,38 @@ def test_marker_description():
     }] == convert(vol.Schema({
         vol.Required('name', description='Description of name'): str,
     }))
+
+
+def test_lower():
+    assert {
+        'type': 'string',
+        'lower': True,
+    } == convert(vol.Schema(vol.All(vol.Lower, str)))
+
+
+def test_upper():
+    assert {
+        'type': 'string',
+        'upper': True,
+    } == convert(vol.Schema(vol.All(vol.Upper, str)))
+
+
+def test_capitalize():
+    assert {
+        'type': 'string',
+        'capitalize': True,
+    } == convert(vol.Schema(vol.All(vol.Capitalize, str)))
+
+
+def test_title():
+    assert {
+        'type': 'string',
+        'title': True,
+    } == convert(vol.Schema(vol.All(vol.Title, str)))
+
+
+def test_strip():
+    assert {
+        'type': 'string',
+        'strip': True,
+    } == convert(vol.Schema(vol.All(vol.Strip, str)))
