@@ -142,3 +142,24 @@ def test_strip():
         'type': 'string',
         'strip': True,
     } == convert(vol.Schema(vol.All(vol.Strip, str)))
+
+
+def test_email():
+    assert {
+        'type': 'string',
+        'format': 'email',
+    } == convert(vol.Schema(vol.All(vol.Email, str)))
+
+
+def test_url():
+    assert {
+        'type': 'string',
+        'format': 'url',
+    } == convert(vol.Schema(vol.All(vol.Url, str)))
+
+
+def test_fqdnurl():
+    assert {
+        'type': 'string',
+        'format': 'fqdnurl',
+    } == convert(vol.Schema(vol.All(vol.FqdnUrl, str)))
