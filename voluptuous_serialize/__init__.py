@@ -88,6 +88,11 @@ def convert(schema):
             schema.__name__.lower(): True,
         }
 
+    if schema in (vol.Email, vol.Url, vol.FqdnUrl):
+        return {
+            'format': schema.__name__.lower(),
+        }
+
     if isinstance(schema, vol.Coerce):
         schema = schema.type
 
