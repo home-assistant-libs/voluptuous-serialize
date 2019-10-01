@@ -20,7 +20,7 @@ def convert(schema, *, custom_serializer=None):
 
     if custom_serializer:
         val = custom_serializer(schema)
-        if val:
+        if val not is UNSUPPORTED:
             return val
 
     if isinstance(schema, Mapping):
