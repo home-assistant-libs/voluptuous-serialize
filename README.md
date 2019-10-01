@@ -42,3 +42,20 @@ _(dictionaries become lists to guarantee order of properties)_
 ```
 
 See the tests for more examples.
+
+## Custom serializer
+
+You can pass a custom serializer to be able to process custom validators. If the serializer returns `UNSUPPORTED`, it will return to normal processing.
+
+```python
+
+from voluptuous_serialize import UNSUPPORTED, convert
+
+def custom_convert(value):
+    if value is my_custom_validator:
+        return {'type': 'custom_validator'}
+        
+    return UNSUPPORTED
+
+convert(value, custom_serializer=custom_convert)
+```
