@@ -12,7 +12,7 @@ TYPES_MAP = {
 }
 
 
-def convert(schema, custom_serializer=None):
+def convert(schema, *, custom_serializer=None):
     """Convert a voluptuous schema to a dictionary."""
     # pylint: disable=too-many-return-statements,too-many-branches
     if isinstance(schema, vol.Schema):
