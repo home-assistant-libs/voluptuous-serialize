@@ -34,7 +34,7 @@ def convert(schema, *, custom_serializer=None):
             else:
                 pkey = key
 
-            pval = convert(value, custom_serializer)
+            pval = convert(value, custom_serializer=custom_serializer)
             pval['name'] = pkey
             if description is not None:
                 pval['description'] = description
