@@ -11,6 +11,7 @@ TYPES_MAP = {
     bool: 'boolean',
 }
 
+UNSUPPORTED = object()
 
 def convert(schema, *, custom_serializer=None):
     """Convert a voluptuous schema to a dictionary."""
@@ -20,7 +21,7 @@ def convert(schema, *, custom_serializer=None):
 
     if custom_serializer:
         val = custom_serializer(schema)
-        if val not is UNSUPPORTED:
+        if val is not UNSUPPORTED:
             return val
 
     if isinstance(schema, Mapping):
