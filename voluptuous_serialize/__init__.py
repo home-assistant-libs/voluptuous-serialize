@@ -52,7 +52,7 @@ def convert(schema, *, custom_serializer=None):
     if isinstance(schema, vol.All):
         val = {}
         for validator in schema.validators:
-            val.update(convert(validator, custom_serializer))
+            val.update(convert(validator, custom_serializer=custom_serializer))
         return val
 
     if isinstance(schema, (vol.Clamp, vol.Range)):
