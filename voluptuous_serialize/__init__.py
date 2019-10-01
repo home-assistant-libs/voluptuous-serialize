@@ -11,12 +11,18 @@ TYPES_MAP = {
     bool: 'boolean',
 }
 
+UNSUPPORTED = object()
 
-def convert(schema):
+def convert(schema, *, custom_serializer=None):
     """Convert a voluptuous schema to a dictionary."""
     # pylint: disable=too-many-return-statements,too-many-branches
     if isinstance(schema, vol.Schema):
         schema = schema.schema
+
+    if custom_serializer:
+        val = custom_serializer(schema)
+        if val is not UNSUPPORTED:
+            return val
 
     if isinstance(schema, Mapping):
         val = []
@@ -29,7 +35,7 @@ def convert(schema):
             else:
                 pkey = key
 
-            pval = convert(value)
+            pval = convert(value, custom_serializer=custom_serializer)
             pval['name'] = pkey
             if description is not None:
                 pval['description'] = description
@@ -47,7 +53,7 @@ def convert(schema):
     if isinstance(schema, vol.All):
         val = {}
         for validator in schema.validators:
-            val.update(convert(validator))
+            val.update(convert(validator, custom_serializer=custom_serializer))
         return val
 
     if isinstance(schema, (vol.Clamp, vol.Range)):
