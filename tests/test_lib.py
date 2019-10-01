@@ -1,6 +1,6 @@
 import voluptuous as vol
 
-from voluptuous_serialize import convert
+from voluptuous_serialize import UNSUPPORTED, convert
 
 
 def test_int_schema():
@@ -163,3 +163,17 @@ def test_fqdnurl():
         'type': 'string',
         'format': 'fqdnurl',
     } == convert(vol.Schema(vol.All(vol.FqdnUrl, str)))
+
+def test_custom_serializer():
+    def custem_serializer(schema):
+        if schema is str:
+            return {'type': 'a string!'}
+        return UNSUPPORTED
+
+    assert {
+        'type': 'a string!',
+        'upper': True,
+    } == convert(vol.Schema(vol.All(
+            vol.Upper, str)),
+            custom_serializer=custem_serializer
+        )

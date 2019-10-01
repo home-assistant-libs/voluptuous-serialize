@@ -13,6 +13,7 @@ TYPES_MAP = {
 
 UNSUPPORTED = object()
 
+
 def convert(schema, *, custom_serializer=None):
     """Convert a voluptuous schema to a dictionary."""
     # pylint: disable=too-many-return-statements,too-many-branches
