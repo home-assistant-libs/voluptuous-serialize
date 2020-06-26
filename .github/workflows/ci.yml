@@ -26,6 +26,9 @@ jobs:
       - name: Lint with flake8
         run: |
           flake8 aiohue
+      - name: Test with pytest
+        run: |
+          pytest tests
       # - name: Check formatting with black
       #   run: |
       #     black aiohue --check
