@@ -164,6 +164,7 @@ def test_fqdnurl():
         'format': 'fqdnurl',
     } == convert(vol.Schema(vol.All(vol.FqdnUrl, str)))
 
+
 def test_custom_serializer():
     def custem_serializer(schema):
         if schema is str:
@@ -177,3 +178,10 @@ def test_custom_serializer():
             vol.Upper, str)),
             custom_serializer=custem_serializer
         )
+
+
+def test_constant():
+    for value in True, False, "Hello", 1:
+        assert {
+            'type': 'constant', 'value': value
+        } == convert(vol.Schema(value))
