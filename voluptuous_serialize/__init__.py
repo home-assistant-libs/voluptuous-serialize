@@ -106,4 +106,7 @@ def convert(schema, *, custom_serializer=None):
     if schema in TYPES_MAP:
         return {'type': TYPES_MAP[schema]}
 
+    if isinstance(schema, (str, int, float, bool)):
+        return {'type': 'constant', 'value': schema}
+
     raise ValueError('Unable to convert schema: {}'.format(schema))
