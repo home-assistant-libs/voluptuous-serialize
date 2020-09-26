@@ -38,7 +38,9 @@ def convert(schema, *, custom_serializer=None):
 
             if not isinstance(pkey, str):
                 if len(schema) != 1:
-                    raise ValueError('Unable to convert schema: {}'.format(schema))
+                    raise ValueError(
+                        'Unable to convert schema: {}'.format(schema)
+                    )
                 return {
                     'type': 'mapping',
                     'key': convert(key),
