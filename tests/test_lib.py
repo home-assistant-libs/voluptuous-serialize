@@ -185,3 +185,17 @@ def test_constant():
         assert {
             'type': 'constant', 'value': value
         } == convert(vol.Schema(value))
+
+def test_dictionary_schema():
+    assert [{
+        'type': 'dictionary',
+        'dictionary': [{'type': 'string', 'name': 'def'}],
+        'name': 'abc'
+    }] == convert(vol.Schema({"abc": {"def": str}}))
+
+def test_mapping_schema():
+    assert {
+        'type': 'mapping',
+        'key': {'type': 'integer'},
+        'value': {'type': 'string'}
+    } == convert(vol.Schema({int: str}))
