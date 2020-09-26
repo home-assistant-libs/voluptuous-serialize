@@ -39,7 +39,11 @@ def convert(schema, *, custom_serializer=None):
             if not isinstance(pkey, str):
                 if len(schema) != 1:
                     raise ValueError('Unable to convert schema: {}'.format(schema))
-                return {'type': 'mapping', 'key': convert(key), 'value': convert(value)}
+                return {
+                    'type': 'mapping',
+                    'key': convert(key),
+                    'value': convert(value)
+                }
 
             pval = convert(value, custom_serializer=custom_serializer)
             if isinstance(pval, list):
