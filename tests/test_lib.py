@@ -5,183 +5,186 @@ from voluptuous_serialize import UNSUPPORTED, convert
 
 def test_int_schema():
     for value in int, vol.Coerce(int):
-        assert {'type': 'integer'} == convert(vol.Schema(value))
+        assert {"type": "integer"} == convert(vol.Schema(value))
 
 
 def test_str_schema():
     for value in str, vol.Coerce(str):
-        assert {'type': 'string'} == convert(vol.Schema(value))
+        assert {"type": "string"} == convert(vol.Schema(value))
 
 
 def test_float_schema():
     for value in float, vol.Coerce(float):
-        assert {'type': 'float'} == convert(vol.Schema(value))
+        assert {"type": "float"} == convert(vol.Schema(value))
 
 
 def test_bool_schema():
     for value in bool, vol.Coerce(bool):
-        assert {'type': 'boolean'} == convert(vol.Schema(value))
+        assert {"type": "boolean"} == convert(vol.Schema(value))
 
 
 def test_integer_clamp():
     assert {
-        'type': 'integer',
-        'valueMin': 100,
-        'valueMax': 1000,
-    } == convert(vol.Schema(
-            vol.All(vol.Coerce(int),
-                    vol.Clamp(min=100, max=1000))))
+        "type": "integer",
+        "valueMin": 100,
+        "valueMax": 1000,
+    } == convert(vol.Schema(vol.All(vol.Coerce(int), vol.Clamp(min=100, max=1000))))
 
 
 def test_length():
     assert {
-        'type': 'string',
-        'lengthMin': 100,
-        'lengthMax': 1000,
-    } == convert(vol.Schema(
-            vol.All(vol.Coerce(str),
-                    vol.Length(min=100, max=1000))))
+        "type": "string",
+        "lengthMin": 100,
+        "lengthMax": 1000,
+    } == convert(vol.Schema(vol.All(vol.Coerce(str), vol.Length(min=100, max=1000))))
 
 
 def test_datetime():
     assert {
-        'type': 'datetime',
-        'format': '%Y-%m-%dT%H:%M:%S.%fZ',
+        "type": "datetime",
+        "format": "%Y-%m-%dT%H:%M:%S.%fZ",
     } == convert(vol.Schema(vol.Datetime()))
 
 
 def test_in():
     assert {
-        'type': 'select',
-        'options': [
-            ('beer', 'beer'),
-            ('wine', 'wine'),
+        "type": "select",
+        "options": [
+            ("beer", "beer"),
+            ("wine", "wine"),
         ],
-    } == convert(vol.Schema(vol.In(['beer', 'wine'])))
+    } == convert(vol.Schema(vol.In(["beer", "wine"])))
 
 
 def test_in_dict():
     assert {
-        'type': 'select',
-        'options': [
-            ('en_US', 'American English'),
-            ('zh_CN', 'Chinese (Simplified)'),
+        "type": "select",
+        "options": [
+            ("en_US", "American English"),
+            ("zh_CN", "Chinese (Simplified)"),
         ],
-    } == convert(vol.Schema(vol.In(
-        {'en_US': 'American English', 'zh_CN': 'Chinese (Simplified)'})))
+    } == convert(
+        vol.Schema(
+            vol.In({"en_US": "American English", "zh_CN": "Chinese (Simplified)"})
+        )
+    )
 
 
 def test_dict():
     assert [
         {
-            'name': 'name',
-            'type': 'string',
-            'lengthMin': 5,
-            'required': True,
+            "name": "name",
+            "type": "string",
+            "lengthMin": 5,
+            "required": True,
         },
         {
-            'name': 'age',
-            'type': 'integer',
-            'valueMin': 18,
-            'required': True,
+            "name": "age",
+            "type": "integer",
+            "valueMin": 18,
+            "required": True,
         },
         {
-            'name': 'hobby',
-            'type': 'string',
-            'default': 'not specified',
-            'optional': True,
-        }
-     ] == convert(vol.Schema({
-            vol.Required('name'): vol.All(str, vol.Length(min=5)),
-            vol.Required('age'): vol.All(vol.Coerce(int), vol.Range(min=18)),
-            vol.Optional('hobby', default='not specified'): str
-        }))
+            "name": "hobby",
+            "type": "string",
+            "default": "not specified",
+            "optional": True,
+        },
+    ] == convert(
+        vol.Schema(
+            {
+                vol.Required("name"): vol.All(str, vol.Length(min=5)),
+                vol.Required("age"): vol.All(vol.Coerce(int), vol.Range(min=18)),
+                vol.Optional("hobby", default="not specified"): str,
+            }
+        )
+    )
 
 
 def test_marker_description():
-    assert [{
-        'name': 'name',
-        'type': 'string',
-        'description': 'Description of name',
-        'required': True,
-    }] == convert(vol.Schema({
-        vol.Required('name', description='Description of name'): str,
-    }))
+    assert [
+        {
+            "name": "name",
+            "type": "string",
+            "description": "Description of name",
+            "required": True,
+        }
+    ] == convert(
+        vol.Schema(
+            {
+                vol.Required("name", description="Description of name"): str,
+            }
+        )
+    )
 
 
 def test_lower():
     assert {
-        'type': 'string',
-        'lower': True,
+        "type": "string",
+        "lower": True,
     } == convert(vol.Schema(vol.All(vol.Lower, str)))
 
 
 def test_upper():
     assert {
-        'type': 'string',
-        'upper': True,
+        "type": "string",
+        "upper": True,
     } == convert(vol.Schema(vol.All(vol.Upper, str)))
 
 
 def test_capitalize():
     assert {
-        'type': 'string',
-        'capitalize': True,
+        "type": "string",
+        "capitalize": True,
     } == convert(vol.Schema(vol.All(vol.Capitalize, str)))
 
 
 def test_title():
     assert {
-        'type': 'string',
-        'title': True,
+        "type": "string",
+        "title": True,
     } == convert(vol.Schema(vol.All(vol.Title, str)))
 
 
 def test_strip():
     assert {
-        'type': 'string',
-        'strip': True,
+        "type": "string",
+        "strip": True,
     } == convert(vol.Schema(vol.All(vol.Strip, str)))
 
 
 def test_email():
     assert {
-        'type': 'string',
-        'format': 'email',
+        "type": "string",
+        "format": "email",
     } == convert(vol.Schema(vol.All(vol.Email, str)))
 
 
 def test_url():
     assert {
-        'type': 'string',
-        'format': 'url',
+        "type": "string",
+        "format": "url",
     } == convert(vol.Schema(vol.All(vol.Url, str)))
 
 
 def test_fqdnurl():
     assert {
-        'type': 'string',
-        'format': 'fqdnurl',
+        "type": "string",
+        "format": "fqdnurl",
     } == convert(vol.Schema(vol.All(vol.FqdnUrl, str)))
 
 
 def test_custom_serializer():
     def custem_serializer(schema):
         if schema is str:
-            return {'type': 'a string!'}
+            return {"type": "a string!"}
         return UNSUPPORTED
 
-    assert {
-        'type': 'a string!',
-        'upper': True,
-    } == convert(vol.Schema(vol.All(
-            vol.Upper, str)),
-            custom_serializer=custem_serializer
-        )
+    assert {"type": "a string!", "upper": True,} == convert(
+        vol.Schema(vol.All(vol.Upper, str)), custom_serializer=custem_serializer
+    )
 
 
 def test_constant():
     for value in True, False, "Hello", 1:
-        assert {
-            'type': 'constant', 'value': value
-        } == convert(vol.Schema(value))
+        assert {"type": "constant", "value": value} == convert(vol.Schema(value))

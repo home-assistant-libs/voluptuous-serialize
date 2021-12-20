@@ -5,10 +5,10 @@ import voluptuous as vol
 
 
 TYPES_MAP = {
-    int: 'integer',
-    str: 'string',
-    float: 'float',
-    bool: 'boolean',
+    int: "integer",
+    str: "string",
+    float: "float",
+    bool: "boolean",
 }
 
 UNSUPPORTED = object()
@@ -37,15 +37,15 @@ def convert(schema, *, custom_serializer=None):
                 pkey = key
 
             pval = convert(value, custom_serializer=custom_serializer)
-            pval['name'] = pkey
+            pval["name"] = pkey
             if description is not None:
-                pval['description'] = description
+                pval["description"] = description
 
             if isinstance(key, (vol.Required, vol.Optional)):
                 pval[key.__class__.__name__.lower()] = True
 
                 if key.default is not vol.UNDEFINED:
-                    pval['default'] = key.default()
+                    pval["default"] = key.default()
 
             val.append(pval)
 
@@ -60,34 +60,34 @@ def convert(schema, *, custom_serializer=None):
     if isinstance(schema, (vol.Clamp, vol.Range)):
         val = {}
         if schema.min is not None:
-            val['valueMin'] = schema.min
+            val["valueMin"] = schema.min
         if schema.max is not None:
-            val['valueMax'] = schema.max
+            val["valueMax"] = schema.max
         return val
 
     if isinstance(schema, vol.Length):
         val = {}
         if schema.min is not None:
-            val['lengthMin'] = schema.min
+            val["lengthMin"] = schema.min
         if schema.max is not None:
-            val['lengthMax'] = schema.max
+            val["lengthMax"] = schema.max
         return val
 
     if isinstance(schema, vol.Datetime):
         return {
-            'type': 'datetime',
-            'format': schema.format,
+            "type": "datetime",
+            "format": schema.format,
         }
 
     if isinstance(schema, vol.In):
         if isinstance(schema.container, Mapping):
             return {
-                'type': 'select',
-                'options': list(schema.container.items()),
+                "type": "select",
+                "options": list(schema.container.items()),
             }
         return {
-            'type': 'select',
-            'options': [(item, item) for item in schema.container]
+            "type": "select",
+            "options": [(item, item) for item in schema.container],
         }
 
     if schema in (vol.Lower, vol.Upper, vol.Capitalize, vol.Title, vol.Strip):
@@ -97,16 +97,16 @@ def convert(schema, *, custom_serializer=None):
 
     if schema in (vol.Email, vol.Url, vol.FqdnUrl):
         return {
-            'format': schema.__name__.lower(),
+            "format": schema.__name__.lower(),
         }
 
     if isinstance(schema, vol.Coerce):
         schema = schema.type
 
     if schema in TYPES_MAP:
-        return {'type': TYPES_MAP[schema]}
+        return {"type": TYPES_MAP[schema]}
 
     if isinstance(schema, (str, int, float, bool)):
-        return {'type': 'constant', 'value': schema}
+        return {"type": "constant", "value": schema}
 
-    raise ValueError('Unable to convert schema: {}'.format(schema))
+    raise ValueError("Unable to convert schema: {}".format(schema))
