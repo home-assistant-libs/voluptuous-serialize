@@ -1,5 +1,6 @@
 """Module to convert voluptuous schemas to dictionaries."""
 from collections.abc import Mapping
+from enum import Enum
 
 import voluptuous as vol
 
@@ -108,5 +109,11 @@ def convert(schema, *, custom_serializer=None):
 
     if isinstance(schema, (str, int, float, bool)):
         return {"type": "constant", "value": schema}
+
+    if issubclass(schema, Enum):
+        return {
+            "type": "select",
+            "options": [(item.value, item.value) for item in schema],
+        }
 
     raise ValueError("Unable to convert schema: {}".format(schema))

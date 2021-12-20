@@ -1,3 +1,5 @@
+from enum import Enum
+
 import voluptuous as vol
 
 from voluptuous_serialize import UNSUPPORTED, convert
@@ -188,3 +190,17 @@ def test_custom_serializer():
 def test_constant():
     for value in True, False, "Hello", 1:
         assert {"type": "constant", "value": value} == convert(vol.Schema(value))
+
+
+def test_enum():
+    class TestEnum(Enum):
+        ONE = "one"
+        TWO = 2
+
+    assert {
+        "type": "select",
+        "options": [
+            ("one", "one"),
+            (2, 2),
+        ],
+    } == convert(vol.Schema(vol.Coerce(TestEnum)))
