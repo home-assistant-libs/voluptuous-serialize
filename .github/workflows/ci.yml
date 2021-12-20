@@ -29,6 +29,6 @@ jobs:
       - name: Test with pytest
         run: |
           pytest tests
-      # - name: Check formatting with black
-      #   run: |
-      #     black voluptuous_serialize tests --check
+      - name: Check formatting with black
+        run: |
+          black voluptuous_serialize tests --check
