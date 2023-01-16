@@ -204,3 +204,17 @@ def test_enum():
             (2, 2),
         ],
     } == convert(vol.Schema(vol.Coerce(TestEnum)))
+
+def test_dictionary_schema():
+    assert [{
+        'type': 'dictionary',
+        'dictionary': [{'type': 'string', 'name': 'def'}],
+        'name': 'abc'
+    }] == convert(vol.Schema({"abc": {"def": str}}))
+
+def test_mapping_schema():
+    assert {
+        'type': 'mapping',
+        'key': {'type': 'integer'},
+        'value': {'type': 'string'}
+    } == convert(vol.Schema({int: str}))

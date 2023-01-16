@@ -12,6 +12,13 @@ TYPES_MAP = {
     bool: "boolean",
 }
 
+PROTO_TYPES_MAP = {
+    "integer": "int32",
+    "string": "string",
+    "float": "float",
+    "boolean": "bool"
+}
+
 UNSUPPORTED = object()
 
 
@@ -37,8 +44,21 @@ def convert(schema, *, custom_serializer=None):
             else:
                 pkey = key
 
+            if not isinstance(pkey, str):
+                if len(schema) != 1:
+                    raise ValueError(
+                        'Unable to convert schema: {}'.format(schema)
+                    )
+                return {
+                    'type': 'mapping',
+                    'key': convert(key),
+                    'value': convert(value)
+                }
+
             pval = convert(value, custom_serializer=custom_serializer)
-            pval["name"] = pkey
+            if isinstance(pval, list):
+                pval = {'type': 'dictionary', 'dictionary': pval}
+            pval['name'] = pkey
             if description is not None:
                 pval["description"] = description
 
@@ -117,3 +137,56 @@ def convert(schema, *, custom_serializer=None):
         }
 
     raise ValueError("Unable to convert schema: {}".format(schema))
+
+
+class Message:
+    def __init__(self, entries, name):
+        self.entries = entries
+        self.name = name
+
+    def __repr__(self):
+        return """message {} {{
+  {}
+}}""".format(
+            self.name,
+            "  \n  ".join([str(entry) for entry in self.entries])
+        )
+
+
+class Entry:
+    def __init__(self, entry, i=1):
+        self.type = entry['type']
+        self.name = entry['name']
+        self.type = self.name if self.type == 'dictionary' else self.type
+        self.description = entry.get('description', '')
+        self.required = entry.get('required', False)
+        self.i = i
+
+    def __repr__(self):
+        return "{}{} {} = {};{}".format(
+            "required " if self.required else "optional ",
+            PROTO_TYPES_MAP.get(self.type, self.type),
+            self.name,
+            self.i,
+            " // {}".format(self.description) if self.description else ""
+        )
+
+
+def proto_convert(_list, name, i=1):
+    entries = []
+    ret = ""
+    for entry in _list:
+        entries.append(Entry(entry, i))
+        i+=1
+        if entry['type'] == 'dictionary':
+            ret += str(proto_convert(entry['dictionary'], entry['name'], i)) + "\n"
+    return ret + str(Message(entries, name)) + "\n"
+
+
+def proto(schema, *, custom_serializer=None):
+    _list = convert(schema, custom_serializer=custom_serializer)
+    return """syntax = "proto2";
+
+package sample;
+
+""" + proto_convert(_list, "root")
