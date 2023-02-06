@@ -182,7 +182,10 @@ def test_custom_serializer():
             return {"type": "a string!"}
         return UNSUPPORTED
 
-    assert {"type": "a string!", "upper": True,} == convert(
+    assert {
+        "type": "a string!",
+        "upper": True,
+    } == convert(
         vol.Schema(vol.All(vol.Upper, str)), custom_serializer=custem_serializer
     )
 
