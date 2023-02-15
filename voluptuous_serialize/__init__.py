@@ -101,6 +101,11 @@ def convert(schema, *, custom_serializer=None):
             "format": schema.__name__.lower(),
         }
 
+    # vol.Maybe
+    if isinstance(schema, vol.Any):
+        if len(schema.validators) == 2 and schema.validators[0] is None:
+            return convert(schema.validators[1], custom_serializer=custom_serializer)
+
     if isinstance(schema, vol.Coerce):
         schema = schema.type
 

@@ -176,6 +176,12 @@ def test_fqdnurl():
     } == convert(vol.Schema(vol.All(vol.FqdnUrl, str)))
 
 
+def test_maybe():
+    assert {
+        "type": "string",
+    } == convert(vol.Schema(vol.Maybe(str)))
+
+
 def test_custom_serializer():
     def custem_serializer(schema):
         if schema is str:
