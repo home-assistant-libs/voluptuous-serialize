@@ -179,6 +179,7 @@ def test_fqdnurl():
 def test_maybe():
     assert {
         "type": "string",
+        "allow_none": True,
     } == convert(vol.Schema(vol.Maybe(str)))
 
 
