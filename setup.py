@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="voluptuous-serialize",
-    version="2.5.0",
+    version="2.6.0",
     description="Convert voluptuous schemas to dictionaries",
     url="http://github.com/balloob/voluptuous-serialize",
     author="Paulus Schoutsen",
