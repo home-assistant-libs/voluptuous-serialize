@@ -104,7 +104,9 @@ def convert(schema, *, custom_serializer=None):
     # vol.Maybe
     if isinstance(schema, vol.Any):
         if len(schema.validators) == 2 and schema.validators[0] is None:
-            return convert(schema.validators[1], custom_serializer=custom_serializer)
+            result = convert(schema.validators[1], custom_serializer=custom_serializer)
+            result["allow_none"] = True
+            return result
 
     if isinstance(schema, vol.Coerce):
         schema = schema.type
