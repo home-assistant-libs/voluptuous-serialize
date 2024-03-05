@@ -1,4 +1,5 @@
 """Module to convert voluptuous schemas to dictionaries."""
+
 from collections.abc import Mapping
 from enum import Enum
 
