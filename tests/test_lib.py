@@ -214,3 +214,13 @@ def test_enum():
             (2, 2),
         ],
     } == convert(vol.Schema(vol.Coerce(TestEnum)))
+
+
+def test_invalid_schema():
+    # check if an exception is raised when an invalid schema is passed
+    try:
+        convert(vol.Schema(None))
+    except Exception as e:
+        assert str(e) == "Unable to convert schema: None"
+    else:
+        assert False, "Expected an exception to be raised"
