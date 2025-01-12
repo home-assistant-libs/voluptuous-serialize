@@ -1,5 +1,6 @@
 from enum import Enum
 
+import pytest
 import voluptuous as vol
 
 from voluptuous_serialize import UNSUPPORTED, convert
@@ -216,11 +217,7 @@ def test_enum():
     } == convert(vol.Schema(vol.Coerce(TestEnum)))
 
 
-def test_invalid_schema():
-    # check if an exception is raised when an invalid schema is passed
-    try:
-        convert(vol.Schema(None))
-    except Exception as e:
-        assert str(e) == "Unable to convert schema: None"
-    else:
-        assert False, "Expected an exception to be raised"
+@pytest.mark.parametrize("invalid_schema", [None, []])
+def test_invalid_schema(invalid_schema):
+    with pytest.raises(ValueError):
+        convert(vol.Schema(invalid_schema))
