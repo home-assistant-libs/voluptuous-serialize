@@ -1,5 +1,6 @@
 from enum import Enum
 
+import pytest
 import voluptuous as vol
 
 from voluptuous_serialize import UNSUPPORTED, convert
@@ -214,3 +215,9 @@ def test_enum():
             (2, 2),
         ],
     } == convert(vol.Schema(vol.Coerce(TestEnum)))
+
+
+@pytest.mark.parametrize("invalid_schema", [None, []])
+def test_invalid_schema(invalid_schema):
+    with pytest.raises(ValueError):
+        convert(vol.Schema(invalid_schema))
