@@ -10,5 +10,6 @@ setup(
     license="Apache License 2.0",
     install_requires=["voluptuous"],
     packages=["voluptuous_serialize"],
+    python_requires=">=3.9",
     zip_safe=True,
 )
