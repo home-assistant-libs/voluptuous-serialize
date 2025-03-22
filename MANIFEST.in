@@ -1,2 +1,0 @@
-# Include all test files in sdist
-graft tests
