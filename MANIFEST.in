@@ -1,2 +1,2 @@
-include tests/*.py
-include LICENSE
+# Include all test files in sdist
+graft tests
