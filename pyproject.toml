@@ -16,6 +16,3 @@ dependencies = [
 
 [project.urls]
 "Source code" = "https://github.com/home-assistant-libs/voluptuous-serialize"
-
-[tool.setuptools.packages.find]
-include = ["voluptuous_serialize*"]
