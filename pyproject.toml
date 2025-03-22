@@ -1,0 +1,18 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=77.0"]
+
+[project]
+name = "voluptuous-serialize"
+version = "2.6.0"
+license = "Apache-2.0"
+description = "Convert voluptuous schemas to dictionaries"
+readme = "README.md"
+authors = [{ name = "Paulus Schoutsen", email = "Paulus@PaulusSchoutsen.nl" }]
+requires-python = ">=3.9"
+dependencies = [
+  "voluptuous",
+]
+
+[project.urls]
+"Source code" = "https://github.com/home-assistant-libs/voluptuous-serialize"
