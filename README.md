@@ -59,3 +59,30 @@ def custom_convert(value):
 
 convert(value, custom_serializer=custom_convert)
 ```
+
+## Proto File Generation
+
+[Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto) are a powerful tool
+to describe structured data. In addition to the undocument json serialization it is useful to add
+a proto serialization which can be used in many other contexts such as API client generation or
+docs generation.
+
+You can try it out via 
+
+```python
+python3 example.py > sample.proto
+```
+
+> A prerequisite is to install []() and [`protoc`](). This is an example install command for mac:
+> ```shell
+> brew install protobuf
+> go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
+> ```
+
+And then generate the docs via
+```shell
+protoc --doc_out=./docs --doc_opt=html,docs.html sample.proto
+protoc --doc_out=./docs --doc_opt=markdown,docs.md sample.proto
+```
+
+Check out the docs in the [`/docs`](/docs) directory.
