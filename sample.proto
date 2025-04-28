@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package sample;
+
+message person {
+  required string name = 2; // the name of the person  
+  optional int32 age = 3; // the age of the person  
+  optional string hobby = 4; // the hobby of the person
+}
+
+message root {
+  required person person = 1; // a person object
+}
+
