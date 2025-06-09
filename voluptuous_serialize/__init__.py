@@ -5,7 +5,6 @@ from enum import Enum
 
 import voluptuous as vol
 
-
 TYPES_MAP = {
     int: "integer",
     str: "string",
@@ -118,7 +117,7 @@ def convert(schema, *, custom_serializer=None):
     if isinstance(schema, (str, int, float, bool)):
         return {"type": "constant", "value": schema}
 
-    if issubclass(schema, Enum):
+    if isinstance(schema, type) and issubclass(schema, Enum):
         return {
             "type": "select",
             "options": [(item.value, item.value) for item in schema],

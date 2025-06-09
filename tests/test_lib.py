@@ -1,7 +1,7 @@
 from enum import Enum
 
+import pytest
 import voluptuous as vol
-
 from voluptuous_serialize import UNSUPPORTED, convert
 
 
@@ -214,3 +214,16 @@ def test_enum():
             (2, 2),
         ],
     } == convert(vol.Schema(vol.Coerce(TestEnum)))
+
+
+def test_raise_unsupported_instance():
+    with pytest.raises(ValueError, match=r"^Unable to convert schema:"):
+        convert(vol.Schema(vol.IsFalse()))
+
+
+def test_raise_unsupported_class():
+    class UnsupportedClass:
+        pass
+
+    with pytest.raises(ValueError, match=r"^Unable to convert schema:"):
+        convert(vol.Schema(UnsupportedClass))
