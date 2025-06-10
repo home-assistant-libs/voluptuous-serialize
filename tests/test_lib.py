@@ -227,8 +227,12 @@ class UnsupportedClass:
     [
         None,
         object,
-        [],
+        list,
+        set,
+        frozenset,
+        tuple,
         UnsupportedClass,
+        [],
         vol.IsFalse(),
         vol.IsTrue(),
         vol.Boolean(),
