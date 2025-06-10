@@ -55,7 +55,13 @@ def convert(schema, *, custom_serializer=None):
     if isinstance(schema, vol.All):
         val = {}
         for validator in schema.validators:
-            val.update(convert(validator, custom_serializer=custom_serializer))
+            pval = convert(validator, custom_serializer=custom_serializer)
+            if isinstance(pval, list):
+                # Mapping schemas in vol.All are not supported
+                raise ValueError(
+                    f"Unable to convert `voluptuous.All` subschema: {validator}"
+                )
+            val.update(pval)
         return val
 
     if isinstance(schema, (vol.Clamp, vol.Range)):
@@ -123,4 +129,4 @@ def convert(schema, *, custom_serializer=None):
             "options": [(item.value, item.value) for item in schema],
         }
 
-    raise ValueError("Unable to convert schema: {}".format(schema))
+    raise ValueError(f"Unable to convert schema: {schema}")

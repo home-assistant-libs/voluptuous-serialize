@@ -268,3 +268,31 @@ def test_unsupported_schema(unsupported_schema):
         match=re.escape(f"Unable to convert schema: {unsupported_schema}"),
     ):
         convert(vol.Schema(unsupported_schema))
+
+
+@pytest.mark.parametrize(
+    "unsupported_schema",
+    [
+        vol.All({"a": int}),
+        vol.All(
+            vol.Schema(
+                {
+                    vol.Required("a"): int,
+                    vol.Required("x"): int,
+                    vol.Required("y"): int,
+                },
+            ),
+            vol.Schema(
+                {
+                    vol.Required("a"): int,
+                }
+            ),
+        ),
+    ],
+)
+def test_unsupported_subschema(unsupported_schema):
+    with pytest.raises(
+        ValueError,
+        match=r"^Unable to convert `.*` subschema:",
+    ):
+        convert(vol.Schema(unsupported_schema))
