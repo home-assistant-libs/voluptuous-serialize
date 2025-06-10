@@ -5,7 +5,6 @@ from enum import Enum
 
 import voluptuous as vol
 
-
 TYPES_MAP = {
     int: "integer",
     str: "string",
