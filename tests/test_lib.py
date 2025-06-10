@@ -228,10 +228,10 @@ class UnsupportedClass:
         None,
         object,
         [],
+        UnsupportedClass,
         vol.IsFalse(),
         vol.IsTrue(),
         vol.Boolean(),
-        UnsupportedClass,
         vol.Any(1, 2, 3, msg="Expected 1 2 or 3"),
         vol.Any("true", "false", vol.All(vol.Any(int, bool), vol.Coerce(bool))),
         vol.Union(
