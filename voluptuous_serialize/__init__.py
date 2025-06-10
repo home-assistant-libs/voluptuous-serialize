@@ -1,6 +1,6 @@
 """Module to convert voluptuous schemas to dictionaries."""
 
-from collections.abc import Mapping
+from collections.abc import Hashable, Mapping
 from enum import Enum
 
 import voluptuous as vol
@@ -111,7 +111,7 @@ def convert(schema, *, custom_serializer=None):
     if isinstance(schema, vol.Coerce):
         schema = schema.type
 
-    if schema in TYPES_MAP:
+    if isinstance(schema, Hashable) and schema in TYPES_MAP:
         return {"type": TYPES_MAP[schema]}
 
     if isinstance(schema, (str, int, float, bool)):
