@@ -275,18 +275,7 @@ def test_unsupported_schema(unsupported_schema):
     [
         vol.All({"a": int}),
         vol.All(
-            vol.Schema(
-                {
-                    vol.Required("a"): int,
-                    vol.Required("x"): int,
-                    vol.Required("y"): int,
-                },
-            ),
-            vol.Schema(
-                {
-                    vol.Required("a"): int,
-                }
-            ),
+            vol.Schema({vol.Required("a"): int}),
         ),
     ],
 )
