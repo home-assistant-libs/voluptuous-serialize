@@ -1,17 +1,19 @@
 # Voluptuous Serialize
 
-Convert Voluptuous schemas to dictionaries so they can be serialized.
+Convert Voluptuous schemas to json serializable objects.
 
 ```python
-from collections import OrderedDict
+import voluptuous as vol
+from voluptuous_serialize import convert
 
-# Use OrderedDict instead of dict.
-# Only starting Python 3.6+ are dictionaries ordered.
-schema = OrderedDict()
-schema[vol.Required('name')] = vol.All(str, vol.Length(min=5))
-schema[vol.Required('age')] = vol.All(vol.Coerce(int), vol.Range(min=18))
-schema[vol.Optional('hobby', default='not specified')] = str
-schema = vol.Schema(schema)
+schema = vol.Schema(
+    {
+        vol.Required("name"): vol.All(str, vol.Length(min=5)),
+        vol.Required("age"): vol.All(vol.Coerce(int), vol.Range(min=18)),
+        vol.Optional("hobby", default="not specified"): str,
+    }
+)
+result = convert(schema)
 ```
 
 becomes
