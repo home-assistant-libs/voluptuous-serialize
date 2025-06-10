@@ -258,6 +258,9 @@ class UnsupportedClass:
 )
 def test_unsupported_schema(unsupported_schema):
     with pytest.raises(
-        ValueError, match=re.escape(f"Unable to convert schema: {unsupported_schema}")
+        ValueError,
+        # the full error message is matched to make sure
+        # the outer schema raised instead of some sub-part
+        match=re.escape(f"Unable to convert schema: {unsupported_schema}"),
     ):
         convert(vol.Schema(unsupported_schema))
