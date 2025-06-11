@@ -1,7 +1,9 @@
+import re
 from enum import Enum
 
 import pytest
 import voluptuous as vol
+
 from voluptuous_serialize import UNSUPPORTED, convert
 
 
@@ -216,20 +218,53 @@ def test_enum():
     } == convert(vol.Schema(vol.Coerce(TestEnum)))
 
 
-@pytest.mark.parametrize("invalid_schema", [None, []])
-def test_invalid_schema(invalid_schema):
-    with pytest.raises(ValueError):
-        convert(vol.Schema(invalid_schema))
+class UnsupportedClass:
+    pass
 
 
-def test_raise_unsupported_instance():
-    with pytest.raises(ValueError, match=r"^Unable to convert schema:"):
-        convert(vol.Schema(vol.IsFalse()))
-
-
-def test_raise_unsupported_class():
-    class UnsupportedClass:
-        pass
-
-    with pytest.raises(ValueError, match=r"^Unable to convert schema:"):
-        convert(vol.Schema(UnsupportedClass))
+@pytest.mark.parametrize(
+    "unsupported_schema",
+    [
+        None,
+        object,
+        list,
+        set,
+        frozenset,
+        tuple,
+        UnsupportedClass,
+        [],
+        vol.IsFalse(),
+        vol.IsTrue(),
+        vol.Boolean(),
+        vol.Any(1, 2, 3, msg="Expected 1 2 or 3"),
+        vol.Any("true", "false", vol.All(vol.Any(int, bool), vol.Coerce(bool))),
+        vol.Union(
+            {"type": "a", "a_val": "1"},
+            {"type": "b", "b_val": "2"},
+            discriminant=lambda val, alt: filter(
+                lambda v: v["type"] == val["type"], alt
+            ),
+        ),
+        vol.Match(r"^0x[A-F0-9]+$"),
+        vol.Replace("hello", "goodbye"),
+        vol.IsFile(),
+        vol.IsDir(),
+        vol.PathExists(),
+        vol.NotIn(["beer", "wine"]),
+        vol.Contains(1),
+        vol.ExactSequence([str, int, list, list]),
+        vol.Unique(),
+        vol.Equal(1),
+        vol.Unordered([2, 1]),
+        vol.Number(precision=6, scale=2),
+        vol.SomeOf(min_valid=2, validators=[vol.Range(1, 5), vol.Any(float, int), 6.6]),
+    ],
+)
+def test_unsupported_schema(unsupported_schema):
+    with pytest.raises(
+        ValueError,
+        # the full error message is matched to make sure
+        # the outer schema raised instead of some sub-part
+        match=re.escape(f"Unable to convert schema: {unsupported_schema}"),
+    ):
+        convert(vol.Schema(unsupported_schema))
