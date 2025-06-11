@@ -277,11 +277,18 @@ def test_unsupported_schema(unsupported_schema):
         vol.All(
             vol.Schema({vol.Required("a"): int}),
         ),
+        {
+            "name": str,
+            "position": {
+                "lat": float,
+                "lon": float,
+            },
+        },
     ],
 )
 def test_unsupported_subschema(unsupported_schema):
     with pytest.raises(
         ValueError,
-        match=r"^Unable to convert `.*` subschema:",
+        match=r"^Unable to convert .*schema:",
     ):
         convert(vol.Schema(unsupported_schema))

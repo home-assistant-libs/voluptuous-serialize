@@ -38,6 +38,9 @@ def convert(schema, *, custom_serializer=None):
                 pkey = key
 
             pval = convert(value, custom_serializer=custom_serializer)
+            if isinstance(pval, list):
+                # nested Mapping schemas are not supported
+                raise ValueError(f"Unable to convert nested mapping schema: {value}")
             pval["name"] = pkey
             if description is not None:
                 pval["description"] = description
