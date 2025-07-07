@@ -18,7 +18,10 @@ UNSUPPORTED = object()
 def convert(schema, *, custom_serializer=None):
     """Convert a voluptuous schema to a dictionary."""
     # pylint: disable=too-many-return-statements,too-many-branches
+    base_required = False  # vol.Schema default
+
     if isinstance(schema, vol.Schema):
+        base_required = schema.required
         schema = schema.schema
 
     if custom_serializer:
@@ -46,10 +49,12 @@ def convert(schema, *, custom_serializer=None):
                 pval["description"] = description
 
             if isinstance(key, (vol.Required, vol.Optional)):
-                pval[key.__class__.__name__.lower()] = True
+                pval["required"] = isinstance(key, vol.Required)
 
                 if key.default is not vol.UNDEFINED:
                     pval["default"] = key.default()
+            else:
+                pval["required"] = base_required
 
             val.append(pval)
 
