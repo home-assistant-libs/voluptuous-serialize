@@ -38,7 +38,7 @@ _(dictionaries become lists to guarantee order of properties)_
     "name": "hobby",
     "type": "string",
     "default": "not specified",
-    "optional": true,
+    "required": false,
   }
 ]
 ```
