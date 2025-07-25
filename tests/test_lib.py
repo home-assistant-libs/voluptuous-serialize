@@ -3,7 +3,6 @@ from enum import Enum
 
 import pytest
 import voluptuous as vol
-
 from voluptuous_serialize import UNSUPPORTED, convert
 
 
@@ -94,6 +93,7 @@ def test_dict(base_required):
             "type": "string",
             "default": "not specified",
             "required": False,
+            "optional": True,
         },
     ] == convert(
         vol.Schema(

@@ -51,6 +51,9 @@ def convert(schema, *, custom_serializer=None):
             if isinstance(key, (vol.Required, vol.Optional)):
                 pval["required"] = isinstance(key, vol.Required)
 
+                # for backward compatibility
+                pval[key.__class__.__name__.lower()] = True
+
                 if key.default is not vol.UNDEFINED:
                     pval["default"] = key.default()
             else:
