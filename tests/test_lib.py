@@ -3,7 +3,6 @@ from enum import Enum
 
 import pytest
 import voluptuous as vol
-
 from voluptuous_serialize import UNSUPPORTED, convert
 
 
@@ -74,7 +73,8 @@ def test_in_dict():
     )
 
 
-def test_dict():
+@pytest.mark.parametrize("base_required", [True, False])
+def test_dict(base_required):
     assert [
         {
             "name": "name",
@@ -86,21 +86,23 @@ def test_dict():
             "name": "age",
             "type": "integer",
             "valueMin": 18,
-            "required": True,
+            "required": base_required,
         },
         {
             "name": "hobby",
             "type": "string",
             "default": "not specified",
+            "required": False,
             "optional": True,
         },
     ] == convert(
         vol.Schema(
             {
                 vol.Required("name"): vol.All(str, vol.Length(min=5)),
-                vol.Required("age"): vol.All(vol.Coerce(int), vol.Range(min=18)),
+                "age": vol.All(vol.Coerce(int), vol.Range(min=18)),
                 vol.Optional("hobby", default="not specified"): str,
-            }
+            },
+            required=base_required,
         )
     )
 
