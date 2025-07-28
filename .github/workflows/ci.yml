@@ -32,3 +32,6 @@ jobs:
       - name: Check formatting with black
         run: |
           black voluptuous_serialize tests --check
+      - name: Check types with mypy
+        run: |
+          mypy voluptuous_serialize tests
