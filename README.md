@@ -51,10 +51,10 @@ See the tests for more examples.
 You can pass a custom serializer to be able to process custom validators. If the serializer returns `UNSUPPORTED`, it will return to normal processing.
 
 ```python
+from typing import Any
+from voluptuous_serialize import UNSUPPORTED, UnsupportedType, convert
 
-from voluptuous_serialize import UNSUPPORTED, convert
-
-def custom_convert(value):
+def custom_convert(value: Any) -> dict[str, str] | UnsupportedType:
     if value is my_custom_validator:
         return {'type': 'custom_validator'}
         

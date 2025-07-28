@@ -10,9 +10,11 @@ description = "Convert voluptuous schemas to dictionaries"
 readme = "README.md"
 authors = [{ name = "Paulus Schoutsen", email = "Paulus@PaulusSchoutsen.nl" }]
 requires-python = ">=3.9"
-dependencies = [
-  "voluptuous",
-]
+dependencies = ["voluptuous"]
 
 [project.urls]
 "Source code" = "https://github.com/home-assistant-libs/voluptuous-serialize"
+
+[tool.mypy]
+strict = true
+warn_unreachable = true

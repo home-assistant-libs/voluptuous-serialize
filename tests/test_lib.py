@@ -1,32 +1,36 @@
+from __future__ import annotations
+
 import re
 from enum import Enum
+from typing import Any
 
 import pytest
 import voluptuous as vol
-from voluptuous_serialize import UNSUPPORTED, convert
+
+from voluptuous_serialize import UNSUPPORTED, UnsupportedType, convert
 
 
-def test_int_schema():
+def test_int_schema() -> None:
     for value in int, vol.Coerce(int):
         assert {"type": "integer"} == convert(vol.Schema(value))
 
 
-def test_str_schema():
+def test_str_schema() -> None:
     for value in str, vol.Coerce(str):
         assert {"type": "string"} == convert(vol.Schema(value))
 
 
-def test_float_schema():
+def test_float_schema() -> None:
     for value in float, vol.Coerce(float):
         assert {"type": "float"} == convert(vol.Schema(value))
 
 
-def test_bool_schema():
+def test_bool_schema() -> None:
     for value in bool, vol.Coerce(bool):
         assert {"type": "boolean"} == convert(vol.Schema(value))
 
 
-def test_integer_clamp():
+def test_integer_clamp() -> None:
     assert {
         "type": "integer",
         "valueMin": 100,
@@ -34,7 +38,7 @@ def test_integer_clamp():
     } == convert(vol.Schema(vol.All(vol.Coerce(int), vol.Clamp(min=100, max=1000))))
 
 
-def test_length():
+def test_length() -> None:
     assert {
         "type": "string",
         "lengthMin": 100,
@@ -42,14 +46,14 @@ def test_length():
     } == convert(vol.Schema(vol.All(vol.Coerce(str), vol.Length(min=100, max=1000))))
 
 
-def test_datetime():
+def test_datetime() -> None:
     assert {
         "type": "datetime",
         "format": "%Y-%m-%dT%H:%M:%S.%fZ",
     } == convert(vol.Schema(vol.Datetime()))
 
 
-def test_in():
+def test_in() -> None:
     assert {
         "type": "select",
         "options": [
@@ -59,7 +63,7 @@ def test_in():
     } == convert(vol.Schema(vol.In(["beer", "wine"])))
 
 
-def test_in_dict():
+def test_in_dict() -> None:
     assert {
         "type": "select",
         "options": [
@@ -74,7 +78,7 @@ def test_in_dict():
 
 
 @pytest.mark.parametrize("base_required", [True, False])
-def test_dict(base_required):
+def test_dict(base_required: bool) -> None:
     assert [
         {
             "name": "name",
@@ -107,7 +111,7 @@ def test_dict(base_required):
     )
 
 
-def test_marker_description():
+def test_marker_description() -> None:
     assert [
         {
             "name": "name",
@@ -124,71 +128,71 @@ def test_marker_description():
     )
 
 
-def test_lower():
+def test_lower() -> None:
     assert {
         "type": "string",
         "lower": True,
     } == convert(vol.Schema(vol.All(vol.Lower, str)))
 
 
-def test_upper():
+def test_upper() -> None:
     assert {
         "type": "string",
         "upper": True,
     } == convert(vol.Schema(vol.All(vol.Upper, str)))
 
 
-def test_capitalize():
+def test_capitalize() -> None:
     assert {
         "type": "string",
         "capitalize": True,
     } == convert(vol.Schema(vol.All(vol.Capitalize, str)))
 
 
-def test_title():
+def test_title() -> None:
     assert {
         "type": "string",
         "title": True,
     } == convert(vol.Schema(vol.All(vol.Title, str)))
 
 
-def test_strip():
+def test_strip() -> None:
     assert {
         "type": "string",
         "strip": True,
     } == convert(vol.Schema(vol.All(vol.Strip, str)))
 
 
-def test_email():
+def test_email() -> None:
     assert {
         "type": "string",
         "format": "email",
     } == convert(vol.Schema(vol.All(vol.Email, str)))
 
 
-def test_url():
+def test_url() -> None:
     assert {
         "type": "string",
         "format": "url",
     } == convert(vol.Schema(vol.All(vol.Url, str)))
 
 
-def test_fqdnurl():
+def test_fqdnurl() -> None:
     assert {
         "type": "string",
         "format": "fqdnurl",
     } == convert(vol.Schema(vol.All(vol.FqdnUrl, str)))
 
 
-def test_maybe():
+def test_maybe() -> None:
     assert {
         "type": "string",
         "allow_none": True,
     } == convert(vol.Schema(vol.Maybe(str)))
 
 
-def test_custom_serializer():
-    def custem_serializer(schema):
+def test_custom_serializer() -> None:
+    def custem_serializer(schema: Any) -> dict[str, str] | UnsupportedType:
         if schema is str:
             return {"type": "a string!"}
         return UNSUPPORTED
@@ -201,12 +205,12 @@ def test_custom_serializer():
     )
 
 
-def test_constant():
+def test_constant() -> None:
     for value in True, False, "Hello", 1:
         assert {"type": "constant", "value": value} == convert(vol.Schema(value))
 
 
-def test_enum():
+def test_enum() -> None:
     class TestEnum(Enum):
         ONE = "one"
         TWO = 2
@@ -262,7 +266,7 @@ class UnsupportedClass:
         vol.SomeOf(min_valid=2, validators=[vol.Range(1, 5), vol.Any(float, int), 6.6]),
     ],
 )
-def test_unsupported_schema(unsupported_schema):
+def test_unsupported_schema(unsupported_schema: Any) -> None:
     with pytest.raises(
         ValueError,
         # the full error message is matched to make sure
@@ -288,7 +292,7 @@ def test_unsupported_schema(unsupported_schema):
         },
     ],
 )
-def test_unsupported_subschema(unsupported_schema):
+def test_unsupported_subschema(unsupported_schema: Any) -> None:
     with pytest.raises(
         ValueError,
         match=r"^Unable to convert .*schema:",
