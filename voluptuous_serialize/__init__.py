@@ -1,21 +1,36 @@
 """Module to convert voluptuous schemas to dictionaries."""
 
-from collections.abc import Hashable, Mapping
+from collections.abc import Mapping
 from enum import Enum
+from typing import Any, Callable, Final
 
 import voluptuous as vol
 
-TYPES_MAP = {
+TYPES_MAP: Final = {
     int: "integer",
     str: "string",
     float: "float",
     bool: "boolean",
 }
 
-UNSUPPORTED = object()
+
+class UnsupportedType(Enum):
+    """Singleton type for use with not set sentinel values."""
+
+    _singleton = 0
 
 
-def convert(schema, *, custom_serializer=None):
+UNSUPPORTED = UnsupportedType._singleton  # noqa: SLF001
+
+
+def convert(
+    schema: Any,
+    *,
+    custom_serializer: Callable[
+        [Any], dict[str, Any] | list[dict[str, Any]] | UnsupportedType
+    ]
+    | None = None,
+) -> dict[str, Any] | list[dict[str, Any]]:
     """Convert a voluptuous schema to a dictionary."""
     # pylint: disable=too-many-return-statements,too-many-branches
     base_required = False  # vol.Schema default
@@ -54,7 +69,7 @@ def convert(schema, *, custom_serializer=None):
                 # for backward compatibility
                 pval[key.__class__.__name__.lower()] = True
 
-                if key.default is not vol.UNDEFINED:
+                if not isinstance(key.default, vol.Undefined):
                     pval["default"] = key.default()
             else:
                 pval["required"] = base_required
@@ -105,7 +120,7 @@ def convert(schema, *, custom_serializer=None):
             }
         return {
             "type": "select",
-            "options": [(item, item) for item in schema.container],
+            "options": [(item, item) for item in schema.container],  # type: ignore[attr-defined]
         }
 
     if schema in (vol.Lower, vol.Upper, vol.Capitalize, vol.Title, vol.Strip):
@@ -122,22 +137,27 @@ def convert(schema, *, custom_serializer=None):
     if isinstance(schema, vol.Any):
         if len(schema.validators) == 2 and schema.validators[0] is None:
             result = convert(schema.validators[1], custom_serializer=custom_serializer)
+            if isinstance(result, list):
+                # Mapping schemas in vol.Any are not supported
+                raise ValueError(
+                    f"Unable to convert `voluptuous.Any` subschema: {schema}"
+                )
             result["allow_none"] = True
             return result
 
     if isinstance(schema, vol.Coerce):
         schema = schema.type
 
-    if isinstance(schema, Hashable) and schema in TYPES_MAP:
-        return {"type": TYPES_MAP[schema]}
+    if isinstance(schema, type):
+        if schema in TYPES_MAP:
+            return {"type": TYPES_MAP[schema]}
+        if issubclass(schema, Enum):
+            return {
+                "type": "select",
+                "options": [(item.value, item.value) for item in schema],
+            }
 
     if isinstance(schema, (str, int, float, bool)):
         return {"type": "constant", "value": schema}
-
-    if isinstance(schema, type) and issubclass(schema, Enum):
-        return {
-            "type": "select",
-            "options": [(item.value, item.value) for item in schema],
-        }
 
     raise ValueError(f"Unable to convert schema: {schema}")
