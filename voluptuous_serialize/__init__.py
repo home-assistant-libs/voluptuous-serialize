@@ -28,10 +28,9 @@ UNSUPPORTED = UnsupportedType._singleton  # noqa: SLF001
 def convert(
     schema: Any,
     *,
-    custom_serializer: Callable[
-        [Any], dict[str, Any] | list[dict[str, Any]] | UnsupportedType
-    ]
-    | None = None,
+    custom_serializer: (
+        Callable[[Any], dict[str, Any] | list[dict[str, Any]] | UnsupportedType] | None
+    ) = None,
 ) -> dict[str, Any] | list[dict[str, Any]]:
     """Convert a voluptuous schema to a dictionary."""
     # pylint: disable=too-many-return-statements,too-many-branches
