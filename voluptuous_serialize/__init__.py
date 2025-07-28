@@ -8,7 +8,7 @@ from typing import Any, Callable, Final
 
 import voluptuous as vol
 
-TYPES_MAP: Final = {
+TYPES_MAP: Final[dict[type, str]] = {
     int: "integer",
     str: "string",
     float: "float",
