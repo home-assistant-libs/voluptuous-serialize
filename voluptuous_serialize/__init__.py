@@ -1,5 +1,7 @@
 """Module to convert voluptuous schemas to dictionaries."""
 
+from __future__ import annotations
+
 from collections.abc import Mapping
 from enum import Enum
 from typing import Any, Callable, Final
