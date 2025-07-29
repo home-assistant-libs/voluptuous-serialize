@@ -35,7 +35,7 @@ jobs:
           pip install -e .
       - name: Test with pytest
         run: |
-          pytest tests
+          pytest
       - name: Check types with mypy
         run: |
           mypy voluptuous_serialize tests
