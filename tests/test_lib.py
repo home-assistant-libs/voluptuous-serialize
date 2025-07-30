@@ -1,3 +1,5 @@
+"""Test cases for voluptuous-serialize library."""
+
 from __future__ import annotations
 
 import re
@@ -12,69 +14,73 @@ from voluptuous_serialize import UNSUPPORTED, UnsupportedType, convert
 
 def test_int_schema() -> None:
     for value in int, vol.Coerce(int):
-        assert {"type": "integer"} == convert(vol.Schema(value))
+        assert convert(vol.Schema(value)) == {"type": "integer"}
 
 
 def test_str_schema() -> None:
     for value in str, vol.Coerce(str):
-        assert {"type": "string"} == convert(vol.Schema(value))
+        assert convert(vol.Schema(value)) == {"type": "string"}
 
 
 def test_float_schema() -> None:
     for value in float, vol.Coerce(float):
-        assert {"type": "float"} == convert(vol.Schema(value))
+        assert convert(vol.Schema(value)) == {"type": "float"}
 
 
 def test_bool_schema() -> None:
     for value in bool, vol.Coerce(bool):
-        assert {"type": "boolean"} == convert(vol.Schema(value))
+        assert convert(vol.Schema(value)) == {"type": "boolean"}
 
 
 def test_integer_clamp() -> None:
-    assert {
+    assert convert(
+        vol.Schema(vol.All(vol.Coerce(int), vol.Clamp(min=100, max=1000)))
+    ) == {
         "type": "integer",
         "valueMin": 100,
         "valueMax": 1000,
-    } == convert(vol.Schema(vol.All(vol.Coerce(int), vol.Clamp(min=100, max=1000))))
+    }
 
 
 def test_length() -> None:
-    assert {
+    assert convert(
+        vol.Schema(vol.All(vol.Coerce(str), vol.Length(min=100, max=1000)))
+    ) == {
         "type": "string",
         "lengthMin": 100,
         "lengthMax": 1000,
-    } == convert(vol.Schema(vol.All(vol.Coerce(str), vol.Length(min=100, max=1000))))
+    }
 
 
 def test_datetime() -> None:
-    assert {
+    assert convert(vol.Schema(vol.Datetime())) == {
         "type": "datetime",
         "format": "%Y-%m-%dT%H:%M:%S.%fZ",
-    } == convert(vol.Schema(vol.Datetime()))
+    }
 
 
 def test_in() -> None:
-    assert {
+    assert convert(vol.Schema(vol.In(["beer", "wine"]))) == {
         "type": "select",
         "options": [
             ("beer", "beer"),
             ("wine", "wine"),
         ],
-    } == convert(vol.Schema(vol.In(["beer", "wine"])))
+    }
 
 
 def test_in_dict() -> None:
-    assert {
+    assert convert(
+        vol.Schema(
+            vol.In({"en_US": "American English", "zh_CN": "Chinese (Simplified)"})
+        )
+    ) == {
         "type": "select",
         "options": [
             ("en_US", "American English"),
             ("zh_CN", "Chinese (Simplified)"),
         ],
-    } == convert(
-        vol.Schema(
-            vol.In({"en_US": "American English", "zh_CN": "Chinese (Simplified)"})
-        )
-    )
+    }
 
 
 @pytest.mark.parametrize("base_required", [True, False])
@@ -112,83 +118,83 @@ def test_dict(base_required: bool) -> None:
 
 
 def test_marker_description() -> None:
-    assert [
+    assert convert(
+        vol.Schema(
+            {
+                vol.Required("name", description="Description of name"): str,
+            }
+        )
+    ) == [
         {
             "name": "name",
             "type": "string",
             "description": "Description of name",
             "required": True,
         }
-    ] == convert(
-        vol.Schema(
-            {
-                vol.Required("name", description="Description of name"): str,
-            }
-        )
-    )
+    ]
 
 
 def test_lower() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.Lower, str))) == {
         "type": "string",
         "lower": True,
-    } == convert(vol.Schema(vol.All(vol.Lower, str)))
+    }
 
 
 def test_upper() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.Upper, str))) == {
         "type": "string",
         "upper": True,
-    } == convert(vol.Schema(vol.All(vol.Upper, str)))
+    }
 
 
 def test_capitalize() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.Capitalize, str))) == {
         "type": "string",
         "capitalize": True,
-    } == convert(vol.Schema(vol.All(vol.Capitalize, str)))
+    }
 
 
 def test_title() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.Title, str))) == {
         "type": "string",
         "title": True,
-    } == convert(vol.Schema(vol.All(vol.Title, str)))
+    }
 
 
 def test_strip() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.Strip, str))) == {
         "type": "string",
         "strip": True,
-    } == convert(vol.Schema(vol.All(vol.Strip, str)))
+    }
 
 
 def test_email() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.Email, str))) == {
         "type": "string",
         "format": "email",
-    } == convert(vol.Schema(vol.All(vol.Email, str)))
+    }
 
 
 def test_url() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.Url, str))) == {
         "type": "string",
         "format": "url",
-    } == convert(vol.Schema(vol.All(vol.Url, str)))
+    }
 
 
 def test_fqdnurl() -> None:
-    assert {
+    assert convert(vol.Schema(vol.All(vol.FqdnUrl, str))) == {
         "type": "string",
         "format": "fqdnurl",
-    } == convert(vol.Schema(vol.All(vol.FqdnUrl, str)))
+    }
 
 
 def test_maybe() -> None:
-    assert {
+    assert convert(vol.Schema(vol.Maybe(str))) == {
         "type": "string",
         "allow_none": True,
-    } == convert(vol.Schema(vol.Maybe(str)))
+    }
 
 
 def test_custom_serializer() -> None:
@@ -197,12 +203,12 @@ def test_custom_serializer() -> None:
             return {"type": "a string!"}
         return UNSUPPORTED
 
-    assert {
+    assert convert(
+        vol.Schema(vol.All(vol.Upper, str)), custom_serializer=custem_serializer
+    ) == {
         "type": "a string!",
         "upper": True,
-    } == convert(
-        vol.Schema(vol.All(vol.Upper, str)), custom_serializer=custem_serializer
-    )
+    }
 
 
 def test_constant() -> None:
@@ -215,13 +221,13 @@ def test_enum() -> None:
         ONE = "one"
         TWO = 2
 
-    assert {
+    assert convert(vol.Schema(vol.Coerce(TestEnum))) == {
         "type": "select",
         "options": [
             ("one", "one"),
             (2, 2),
         ],
-    } == convert(vol.Schema(vol.Coerce(TestEnum)))
+    }
 
 
 class UnsupportedClass:

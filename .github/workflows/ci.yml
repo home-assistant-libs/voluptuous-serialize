@@ -18,20 +18,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5.6.0
         with:
-          python-version: 3.9
+          python-version-file: "pyproject.toml"
+
+      - name: Set up Ruff
+        uses: astral-sh/ruff-action@v3
+        with:
+          version-file: "requirements_test.txt"
+      - name: Lint with Ruff
+        run: ruff check --output-format=github
+      - name: Format with Ruff
+        run: ruff format --check --respect-gitignore
+
       - name: Install dependencies
         run: |
           pip install -r requirements_test.txt
           pip install -e .
-      - name: Lint with flake8
-        run: |
-          flake8 voluptuous_serialize
       - name: Test with pytest
         run: |
-          pytest tests
-      - name: Check formatting with black
-        run: |
-          black voluptuous_serialize tests --check
+          pytest
       - name: Check types with mypy
         run: |
           mypy voluptuous_serialize tests
