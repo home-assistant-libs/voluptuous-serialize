@@ -85,6 +85,8 @@ bin/
 pip-selfcheck.json
 pyvenv.cfg
 
+# OS specifics
+.DS_Store
 
 # Spyder project settings
 .spyderproject
@@ -92,5 +94,11 @@ pyvenv.cfg
 # Rope project settings
 .ropeproject
 
-# py.test
+# Test and lint caches
 .pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Editors
+.vscode
+.idea
