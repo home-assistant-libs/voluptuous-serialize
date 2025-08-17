@@ -32,7 +32,7 @@ def convert(
         Callable[[Any], dict[str, Any] | list[dict[str, Any]] | UnsupportedType] | None
     ) = None,
 ) -> dict[str, Any] | list[dict[str, Any]]:
-    """Convert a voluptuous schema to a dictionary."""
+    """Convert a voluptuous schema to a json serializable object."""
     # pylint: disable=too-many-return-statements,too-many-branches
     base_required = False  # vol.Schema default
 

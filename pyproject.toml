@@ -4,7 +4,7 @@ requires = ["setuptools>=77.0"]
 
 [project]
 name = "voluptuous-serialize"
-version = "2.6.0"
+version = "2.7.0"
 license = "Apache-2.0"
 description = "Convert voluptuous schemas to dictionaries"
 readme = "README.md"
