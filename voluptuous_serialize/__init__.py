@@ -67,9 +67,6 @@ def convert(
             if isinstance(key, (vol.Required, vol.Optional)):
                 pval["required"] = isinstance(key, vol.Required)
 
-                # for backward compatibility
-                pval[key.__class__.__name__.lower()] = True
-
                 if not isinstance(key.default, vol.Undefined):
                     pval["default"] = key.default()
             else:
