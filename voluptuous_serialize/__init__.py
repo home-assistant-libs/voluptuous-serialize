@@ -121,7 +121,7 @@ def convert(
             }
         return {
             "type": "select",
-            "options": [(item, item) for item in schema.container],  # type: ignore[attr-defined]
+            "options": [(item, item) for item in schema.container],  # type: ignore[union-attr]
         }
 
     if schema in (vol.Lower, vol.Upper, vol.Capitalize, vol.Title, vol.Strip):
