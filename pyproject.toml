@@ -20,7 +20,7 @@ dev = [
   "pytest~=9.0.2",
   "ruff~=0.14.10",
   "mypy~=1.19.1",
-  "voluptuous~=0.16.0", # for type informations
+  "voluptuous~=0.16.0", # for type information
 ]
 
 [tool.pytest.ini_options]
