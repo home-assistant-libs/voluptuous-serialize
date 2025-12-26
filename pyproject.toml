@@ -15,6 +15,9 @@ dependencies = ["voluptuous"]
 [project.urls]
 "Source code" = "https://github.com/home-assistant-libs/voluptuous-serialize"
 
+[dependency-groups]
+dev = ["pytest~=8.4.2", "ruff~=0.14.9", "mypy~=1.19.0", "voluptuous~=0.16.0"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
