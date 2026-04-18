@@ -39,7 +39,6 @@ _(dictionaries become lists to guarantee order of properties)_
     "type": "string",
     "default": "not specified",
     "required": false,
-    "optional": true,  // This is deprecated. Please use "required" key instead.
   }
 ]
 ```
