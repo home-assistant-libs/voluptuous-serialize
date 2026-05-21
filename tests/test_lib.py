@@ -103,7 +103,6 @@ def test_dict(base_required: bool) -> None:
             "type": "string",
             "default": "not specified",
             "required": False,
-            "optional": True,
         },
     ] == convert(
         vol.Schema(
