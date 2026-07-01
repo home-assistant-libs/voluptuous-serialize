@@ -19,7 +19,7 @@ dependencies = ["voluptuous"]
 dev = [
   "pytest==9.0.2",
   "ruff==0.15.15",
-  "mypy==1.19.1",
+  "mypy==2.1.0",
   "voluptuous==0.16.0", # for type information
 ]
 
