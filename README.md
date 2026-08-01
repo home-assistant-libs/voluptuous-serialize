@@ -54,11 +54,13 @@ You can pass a custom serializer to be able to process custom validators. If the
 from typing import Any
 from voluptuous_serialize import UNSUPPORTED, UnsupportedType, convert
 
+
 def custom_convert(value: Any) -> dict[str, str] | UnsupportedType:
     if value is my_custom_validator:
-        return {'type': 'custom_validator'}
-        
+        return {"type": "custom_validator"}
+
     return UNSUPPORTED
+
 
 convert(value, custom_serializer=custom_convert)
 ```
